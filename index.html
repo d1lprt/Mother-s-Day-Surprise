@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Mother's Day 💕</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fce4f0 0%, #fff0f5 60%, #f0e4ff 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+#app {
+  width: 100%; max-width: 580px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fce4f0 0%, #fff0f5 60%, #f0e4ff 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-start;
+  padding: 0 1rem 2rem;
+  position: relative; overflow: hidden;
+}
+
+.ribbon {
+  position: fixed; top: 0; left: 0; right: 0; height: 7px; z-index: 100;
+  background: repeating-linear-gradient(90deg,#f5a0c0,#f5a0c0 20px,#d4a0f5 20px,#d4a0f5 40px);
+}
+
+.header { text-align: center; padding: 30px 0 14px; z-index: 2; position: relative; }
+.header h1 { font-size: 26px; font-weight: 500; color: #a0346e; }
+.header p  { font-size: 13px; color: #c2607a; margin-top: 4px; }
+
+#stage {
+  width: 100%; max-width: 560px;
+  height: 380px;
+  position: relative; z-index: 2;
+  overflow: hidden;
+}
+
+.balloon-actor {
+  position: absolute;
+  display: flex; flex-direction: column; align-items: center;
+  cursor: pointer;
+  bottom: -160px;
+}
+
+.balloon-actor.fly-in {
+  animation: flyIn 1.4s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+.balloon-actor.floating {
+  animation: floatHover var(--dur,3.2s) ease-in-out infinite alternate;
+}
+
+.balloon-actor.popping .bal-body {
+  animation: popBurst 0.28s ease forwards;
+}
+
+@keyframes flyIn {
+  0%   { bottom: -160px; opacity: 0.5; transform: scale(0.7) rotate(-5deg); }
+  60%  { opacity: 1; transform: scale(1.05) rotate(2deg); }
+  80%  { transform: scale(0.97) rotate(-1deg); }
+  100% { bottom: var(--land-y); transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes floatHover {
+  0%   { transform: translateY(0px) rotate(-2deg); }
+  100% { transform: translateY(-18px) rotate(2deg); }
+}
+
+@keyframes popBurst {
+  0%   { transform: scale(1); opacity: 1; }
+  50%  { transform: scale(1.5); opacity: 0.4; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+.bal-body {
+  width: 82px; height: 96px;
+  border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: inset -7px -7px 18px rgba(0,0,0,0.11), inset 5px 4px 10px rgba(255,255,255,0.45);
+  transition: transform 0.13s;
+}
+.balloon-actor:not(.popping):hover .bal-body { transform: scale(1.09); }
+
+.bal-shine {
+  position: absolute; top: 14px; left: 16px;
+  width: 16px; height: 22px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 50%; transform: rotate(-30deg);
+}
+.bal-icon { font-size: 26px; z-index: 1; }
+.bal-num {
+  position: absolute; top: -8px; right: -8px;
+  width: 20px; height: 20px;
+  background: white; border-radius: 50%;
+  font-size: 10px; font-weight: 600; color: #a0346e;
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid #f5a0c0;
+}
+.bal-knot { width: 8px; height: 8px; border-radius: 50%; margin-top: -3px; }
+.bal-string { width: 1.5px; height: 34px; background: #c8c8c8; }
+.bal-label {
+  font-size: 11px; color: #a0346e; font-weight: 500;
+  margin-top: 5px; text-align: center; max-width: 90px; line-height: 1.3;
+}
+
+.confetti-piece {
+  position: fixed; width: 7px; height: 7px; border-radius: 2px;
+  pointer-events: none; z-index: 999;
+  animation: confettiFall 1.2s ease forwards;
+}
+@keyframes confettiFall {
+  0%   { transform: translate(0,0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--tx),var(--ty)) rotate(720deg); opacity: 0; }
+}
+
+.progress-wrap { z-index: 2; text-align: center; margin-top: 8px; }
+.progress-wrap p { font-size: 12px; color: #c2607a; margin-bottom: 6px; }
+.progress-track { width: 220px; height: 6px; background: rgba(162,52,110,0.15); border-radius: 99px; overflow: hidden; margin: 0 auto; }
+.progress-fill  { height: 100%; background: #d4537a; border-radius: 99px; transition: width 0.4s ease; }
+
+.overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(255,240,248,0.8); backdrop-filter: blur(4px);
+  z-index: 50;
+}
+.modal {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%,-50%) scale(0);
+  background: white; border-radius: 22px;
+  padding: 1.6rem 1.6rem 1.4rem; text-align: center;
+  z-index: 60; width: 92%; max-width: 360px;
+  animation: cardPop 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  box-shadow: 0 10px 50px rgba(160,52,110,0.2);
+}
+@keyframes cardPop {
+  from { transform: translate(-50%,-50%) scale(0); }
+  to   { transform: translate(-50%,-50%) scale(1); }
+}
+.modal-icon { font-size: 34px; margin-bottom: 8px; }
+.modal h2 { font-size: 18px; color: #a0346e; font-weight: 500; margin-bottom: 6px; }
+.modal p  { font-size: 13px; color: #666; line-height: 1.75; }
+
+.photo-area { margin: 12px 0; }
+.photo-preview { width: 100%; max-height: 180px; object-fit: cover; border-radius: 14px; border: 2px solid #f5c6da; display: none; }
+.photo-placeholder {
+  border: 2px dashed #f5c6da; border-radius: 14px;
+  padding: 24px 14px; cursor: pointer; color: #c2607a;
+  font-size: 13px; background: #fff5f9; transition: background 0.2s;
+}
+.photo-placeholder:hover { background: #ffe8f2; }
+.photo-placeholder .ph-icon { font-size: 26px; display: block; margin-bottom: 6px; }
+input[type=file] { display: none; }
+
+.voice-area { margin: 12px 0; }
+.record-btn {
+  background: #fee2f0; border: 2px solid #f5a0c0;
+  border-radius: 50px; padding: 10px 22px;
+  font-size: 13px; color: #a0346e; cursor: pointer;
+  font-family: inherit; display: flex;
+  align-items: center; gap: 8px; margin: 0 auto;
+  transition: all 0.2s;
+}
+.record-btn.recording {
+  background: #fca5a5; border-color: #f87171; color: #991b1b;
+  animation: pulse 1s infinite;
+}
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,0.4);}50%{box-shadow:0 0 0 9px rgba(248,113,113,0);} }
+.rec-dot { width: 10px; height: 10px; border-radius: 50%; background: #d4537a; flex-shrink: 0; }
+.record-btn.recording .rec-dot { background: #ef4444; }
+.audio-player { margin-top: 10px; display: none; }
+.audio-player audio { width: 100%; border-radius: 8px; }
+.rec-timer { font-size: 12px; color: #c2607a; margin-top: 6px; display: none; }
+
+.close-btn {
+  margin-top: 14px; background: #f5c6da; border: none;
+  border-radius: 50px; padding: 9px 26px;
+  font-size: 13px; color: #a0346e; cursor: pointer;
+  font-family: inherit; transition: background 0.15s;
+}
+.close-btn:hover { background: #f0a8c8; }
+
+.final-view {
+  display: none; z-index: 2; position: relative;
+  text-align: center; padding: 80px 20px 40px;
+  animation: fadeUp 0.6s ease forwards;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);} }
+.big-heart { font-size: 50px; display: block; animation: hb 0.8s infinite alternate; }
+@keyframes hb { from{transform:scale(1);}to{transform:scale(1.15);} }
+.final-view h1 { font-size: 28px; color: #a0346e; font-weight: 500; margin: 12px 0 10px; }
+.final-view p  { font-size: 14px; color: #c2607a; line-height: 1.8; max-width: 340px; margin: 0 auto; }
+.restart-btn {
+  margin-top: 1.2rem; background: #a0346e; color: white;
+  border: none; border-radius: 50px; padding: 11px 30px;
+  font-size: 14px; cursor: pointer; font-family: inherit;
+  transition: background 0.15s;
+}
+.restart-btn:hover { background: #c0456e; }
+
+.star { position: fixed; opacity: 0.3; font-size: 9px; pointer-events: none; animation: twinkle 3s infinite alternate; z-index: 0; }
+@keyframes twinkle { 0%{opacity:0.1;}100%{opacity:0.45;} }
+</style>
+</head>
+<body>
+<div class="ribbon"></div>
+<div id="app">
+
+  <div id="mainView" style="width:100%;display:flex;flex-direction:column;align-items:center;">
+    <div class="header">
+      <h1>Happy Mother's Day 💕</h1>
+      <p>Tap each balloon to pop it &amp; find a surprise inside!</p>
+    </div>
+    <div id="stage"></div>
+    <div class="progress-wrap">
+      <p id="progressText">Balloon 1 of 6 incoming…</p>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="final-view" id="finalView">
+    <span class="big-heart">💖</span>
+    <h1>You're the best Mom!</h1>
+    <p>Every balloon held a piece of our love. Thank you for being our sunshine, our safe place, and our greatest blessing. Today is all yours!</p>
+    <button class="restart-btn" onclick="resetAll()">Replay 🎈</button>
+  </div>
+
+</div>
+
+<script>
+const BALLOONS = [
+  { color:'#F9A8D4', icon:'💐', title:'My Flower',      msg:'You bloom in every room you enter. Thank you for making the world beautiful, Mom.',        type:'photo',   photoIndex:0 },
+  { color:'#C4B5FD', icon:'⭐', title:'My Star',        msg:'You have always been my guiding light. Whenever I was lost, you showed me the way home.',  type:'photo',   photoIndex:1 },
+  { color:'#FCA5A5', icon:'🍰', title:'Sweet as You',   msg:'No cake is as sweet as your smile. Wishing you a day full of joy and treats!',             type:'photo',   photoIndex:2 },
+  { color:'#86EFAC', icon:'🌸', title:'In Full Bloom',  msg:'Just like spring, you bring warmth and colour to everyone around you. Happy Mother\'s Day!',type:'photo',   photoIndex:3 },
+  { color:'#FCD34D', icon:'🌟', title:'Shining Bright', msg:'Your strength and grace inspire me every single day. So proud to call you my mom.',        type:'photo',   photoIndex:4 },
+  { color:'#93C5FD', icon:'💌', title:'Voice for You',  msg:'I recorded something special just for you. Press play and feel the love!',                 type:'voice'                },
+];
+
+const VOICE_NOTE_BASE64 = 'data:audio/ogg;base64,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';
+
+const X_POSITIONS = [12, 58, 32, 70, 8, 48];
+const LAND_Y_PX   = [60, 45, 85, 35, 65, 50];
+const FLOAT_DUR   = ['3.1s','3.7s','3.3s','3.9s','3.2s','3.6s'];
+
+let currentIdx = 0, poppedCount = 0, modalOpen = false;
+let mediaRecorder = null, audioChunks = [], recordedBlob = null;
+let timerInterval = null, recSeconds = 0;
+const photoDataURLs = [
+null,   // Balloon 1 photo
+null,   // Balloon 2 photo
+  null,  // Balloon 3 photo ⚠️ check filename spelling
+  null,            // Balloon 4 photo — replace null with './yourphoto.jpg' or base64
+  null,            // Balloon 5 photo — replace null with './yourphoto.jpg' or base64
+];
+const stage = document.getElementById('stage');
+
+function makeStars() {
+  for (let i = 0; i < 16; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.textContent = ['✦','✧','⋆'][i%3];
+    s.style.cssText = `left:${Math.random()*93}%;top:${Math.random()*93}%;animation-delay:${(Math.random()*3).toFixed(1)}s`;
+    document.body.appendChild(s);
+  }
+}
+
+function launchBalloon(idx) {
+  if (idx >= BALLOONS.length) return;
+  const b = BALLOONS[idx];
+  const landY = LAND_Y_PX[idx];
+  const el = document.createElement('div');
+  el.className = 'balloon-actor fly-in';
+  el.id = 'bal_' + idx;
+  el.style.cssText = `left:${X_POSITIONS[idx]}%;--land-y:${landY}px;--dur:${FLOAT_DUR[idx]};`;
+  el.innerHTML = `
+    <div class="bal-body" style="background:${b.color};">
+      <div class="bal-shine"></div>
+      <span class="bal-icon">${b.icon}</span>
+      <div class="bal-num">${idx+1}</div>
+    </div>
+    <div class="bal-knot" style="background:${b.color};"></div>
+    <div class="bal-string"></div>
+    <div class="bal-label">${b.title}</div>
+  `;
+  el.addEventListener('click', () => popBalloon(idx, el, b));
+  stage.appendChild(el);
+  setTimeout(() => {
+    if (!el.dataset.popped) {
+      el.style.bottom = landY + 'px';
+      el.classList.remove('fly-in');
+      el.classList.add('floating');
+    }
+  }, 1420);
+  updateProgress(idx);
+}
+
+function popBalloon(idx, el, b) {
+  if (el.dataset.popped || modalOpen) return;
+  el.dataset.popped = '1';
+  el.classList.add('popping');
+  el.classList.remove('floating');
+  const rect = el.getBoundingClientRect();
+  spawnConfetti(rect.left + rect.width/2, rect.top + rect.height/2);
+  poppedCount++;
+  document.getElementById('progressFill').style.width = Math.round(poppedCount/6*100) + '%';
+  setTimeout(() => { el.style.opacity='0'; el.style.pointerEvents='none'; }, 290);
+  setTimeout(() => showModal(b, idx), 360);
+}
+
+function spawnConfetti(cx, cy) {
+  const cols = ['#F9A8D4','#C4B5FD','#FCA5A5','#86EFAC','#FCD34D','#93C5FD','#ff6b8a','#a78bfa'];
+  for (let i = 0; i < 28; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.background = cols[i % cols.length];
+    c.style.left = cx + 'px'; c.style.top = cy + 'px';
+    const ang = Math.random()*360, dist = 55 + Math.random()*90;
+    c.style.setProperty('--tx', Math.cos(ang*Math.PI/180)*dist + 'px');
+    c.style.setProperty('--ty', Math.sin(ang*Math.PI/180)*dist + 'px');
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 1300);
+  }
+}
+
+function updateProgress(idx) {
+  document.getElementById('progressText').textContent =
+    idx < 5 ? `Balloon ${idx+1} of 6 — pop it!` : 'Last balloon — the big surprise! 🎤';
+}
+
+function showModal(b, idx) {
+  modalOpen = true;
+  const ov = document.createElement('div'); ov.className = 'overlay'; document.body.appendChild(ov);
+  const m  = document.createElement('div'); m.className  = 'modal';
+
+  let extra = '';
+  if (b.type === 'photo') {
+    const pi = b.photoIndex, src = photoDataURLs[pi] || '';
+    extra = `
+      <div class="photo-area">
+        <input type="file" id="fi_${pi}" accept="image/*">
+        <img class="photo-preview" id="pi_${pi}" src="${src}" style="${src?'display:block':'display:none'}">
+        <div class="photo-placeholder" id="ph_${pi}" style="${src?'display:none':''}" onclick="document.getElementById('fi_${pi}').click()">
+          <span class="ph-icon">📷</span>Tap to add a photo
+        </div>
+      </div>`;
+  } else if (b.type === 'voice') {
+    if (VOICE_NOTE_BASE64) {
+      extra = `
+        <div class="voice-area">
+          <p style="font-size:13px;color:#c2607a;margin-bottom:8px;">🎙️ A voice note just for you 💕</p>
+          <div class="audio-player" style="display:block;"><audio id="audioEl" controls src="${VOICE_NOTE_BASE64}"></audio></div>
+        </div>`;
+    } else {
+      extra = `
+        <div class="voice-area">
+          <button class="record-btn" id="recBtn" onclick="toggleRecord()">
+            <div class="rec-dot"></div> Tap to record a voice note
+          </button>
+          <div class="rec-timer" id="recTimer">⏺ 0:00</div>
+          <div class="audio-player" id="audioPlayer"><audio id="audioEl" controls></audio></div>
+        </div>`;
+    }
+  }
+
+  m.innerHTML = `
+    <div class="modal-icon">${b.icon}</div>
+    <h2>${b.title}</h2>
+    <p>${b.msg}</p>
+    ${extra}
+    <button class="close-btn" id="closeMBtn">Close 💕</button>
+  `;
+  document.body.appendChild(m);
+
+  if (b.type === 'photo') {
+    const fi = m.querySelector(`#fi_${b.photoIndex}`);
+    if (fi) fi.addEventListener('change', e => handlePhoto(e, b.photoIndex));
+  }
+
+  if (b.type === 'voice' && !VOICE_NOTE_BASE64 && recordedBlob) {
+    const url = URL.createObjectURL(recordedBlob);
+    m.querySelector('#audioEl').src = url;
+    m.querySelector('#audioPlayer').style.display = 'block';
+    m.querySelector('#recBtn').innerHTML = '<div class="rec-dot"></div> Re-record';
+  }
+
+  m.querySelector('#closeMBtn').addEventListener('click', () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') stopRecording();
+    m.remove(); ov.remove();
+    modalOpen = false;
+    if (poppedCount === 6) {
+      setTimeout(() => {
+        document.getElementById('mainView').style.display = 'none';
+        document.getElementById('finalView').style.display = 'block';
+      }, 400);
+    } else {
+      currentIdx++;
+      document.getElementById('progressText').textContent = `Balloon ${currentIdx+1} of 6 incoming…`;
+      setTimeout(() => launchBalloon(currentIdx), 500);
+    }
+  });
+}
+
+function handlePhoto(e, pi) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    photoDataURLs[pi] = ev.target.result;
+    const img = document.getElementById('pi_'+pi), ph = document.getElementById('ph_'+pi);
+    if (img) { img.src = ev.target.result; img.style.display = 'block'; }
+    if (ph)  { ph.style.display = 'none'; }
+  };
+  reader.readAsDataURL(file);
+}
+
+function toggleRecord() {
+  if (!mediaRecorder || mediaRecorder.state === 'inactive') startRecording();
+  else stopRecording();
+}
+
+function startRecording() {
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    audioChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+    mediaRecorder.onstop = () => {
+      recordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
+      stream.getTracks().forEach(t => t.stop());
+      const url = URL.createObjectURL(recordedBlob);
+      const ap = document.getElementById('audioPlayer'), ae = document.getElementById('audioEl');
+      if (ap && ae) { ae.src = url; ap.style.display = 'block'; }
+      const btn = document.getElementById('recBtn');
+      if (btn) { btn.innerHTML = '<div class="rec-dot"></div> Re-record'; btn.classList.remove('recording'); }
+      const timer = document.getElementById('recTimer');
+      if (timer) timer.style.display = 'none';
+      clearInterval(timerInterval);
+    };
+    mediaRecorder.start();
+    recSeconds = 0;
+    const btn = document.getElementById('recBtn');
+    if (btn) { btn.innerHTML = '<div class="rec-dot"></div> Stop recording'; btn.classList.add('recording'); }
+    const timer = document.getElementById('recTimer');
+    if (timer) timer.style.display = 'block';
+    timerInterval = setInterval(() => {
+      recSeconds++;
+      const mm = Math.floor(recSeconds/60), ss = recSeconds%60;
+      const t = document.getElementById('recTimer');
+      if (t) t.textContent = `⏺ ${mm}:${ss.toString().padStart(2,'0')}`;
+    }, 1000);
+  }).catch(() => alert('Microphone access denied. Please allow mic permissions and try again.'));
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state === 'recording') {
+    mediaRecorder.stop(); clearInterval(timerInterval);
+  }
+}
+
+function resetAll() {
+  currentIdx = 0; poppedCount = 0; modalOpen = false;
+  recordedBlob = null; mediaRecorder = null; audioChunks = [];
+  stage.innerHTML = '';
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('mainView').style.display = 'flex';
+  document.getElementById('finalView').style.display = 'none';
+  setTimeout(() => launchBalloon(0), 300);
+}
+
+makeStars();
+setTimeout(() => launchBalloon(0), 400);
+</script>
+</body>
+</html>
